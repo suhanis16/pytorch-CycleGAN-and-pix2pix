@@ -10,8 +10,8 @@ import random
 
 if __name__ == '__main__':
     opt = TrainOptions().parse()   # get training options
-    dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
-    dataset_size = len(dataset)    # get the number of images in the dataset.
+    dataset_loader = create_dataset(opt)  # create a dataset loader given opt.dataset_mode and other options
+    dataset_size = len(dataset_loader.dataset)    # get the number of images in the dataset.
     print('The number of training images = %d' % dataset_size)
 
     model = create_model(opt)      # create a model given opt.model and other options
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
             total_iters += opt.batch_size
             epoch_iter += opt.batch_size
-            data = dataset[idx]  # get data corresponding to the randomly sampled index
+            data = next(iter(dataset_loader))  # get the next batch of data from the dataset loader
             model.set_input(data)         # unpack data from dataset and apply preprocessing
             model.optimize_parameters()   # calculate loss functions, get gradients, update network weights
 
